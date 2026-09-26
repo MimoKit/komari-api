@@ -19,8 +19,8 @@
 
 const server = require('server')
 
-const PLUGIN_VERSION = '1.0.0'
-const DOCS_URL = 'https://github.com/MimoKit/komari-api#readme'
+const PLUGIN_VERSION = '1.0.1'
+const DOCS_URL = 'https://mimokit.github.io/komari-api/'
 
 const ENDPOINTS = [
   { method: 'GET', path: '/api/v1', description: '接口索引与版本信息' },

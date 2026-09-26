@@ -9,7 +9,7 @@
     "en": "Expose console-visible server metrics as a clean REST API for bots, scripts and custom dashboards."
   },
   "author": "MimoKit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "url": "https://github.com/MimoKit/komari-api",
   "icon": "https://github.com/MimoKit.png",
   "komari": ">=1.0.0",
