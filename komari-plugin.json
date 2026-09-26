@@ -9,7 +9,7 @@
     "en": "Expose console-visible server metrics as a clean REST API for bots, scripts and custom dashboards."
   },
   "author": "MimoKit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "url": "https://github.com/MimoKit/komari-api",
   "icon": "https://github.com/MimoKit.png",
   "komari": ">=1.4.0",
@@ -23,13 +23,13 @@
     "data": [
       {
         "key": "tokens",
-        "type": "textbox",
+        "type": "string",
         "name": { "zh_CN": "访问令牌", "en": "API Tokens" },
         "required": false,
         "default": "",
         "help": {
-          "zh_CN": "每行一个令牌。请求带上令牌（Authorization: Bearer / ?token=）即可查看隐藏节点与完整信息；留空时 API 以访客视角工作。",
-          "en": "One token per line. Requests with a token see hidden nodes and full details; without tokens the API works in guest view."
+          "zh_CN": "多个令牌用逗号分隔。请求带上令牌（Authorization: Bearer / ?token=）即可查看隐藏节点与完整信息；留空时 API 以访客视角工作。",
+          "en": "Comma-separated tokens. Requests with a token see hidden nodes and full details; without tokens the API works in guest view."
         }
       },
       {
