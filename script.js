@@ -19,7 +19,7 @@
 
 const server = require('server')
 
-const PLUGIN_VERSION = '1.0.1'
+const PLUGIN_VERSION = '1.0.2'
 const DOCS_URL = 'https://mimokit.github.io/komari-api/'
 
 const ENDPOINTS = [
