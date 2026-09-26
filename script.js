@@ -17,6 +17,8 @@
  * 敏感字段（agent token 等）一律白名单剔除，永远不会出现在响应里。
  */
 
+const server = require('server')
+
 const PLUGIN_VERSION = '1.0.0'
 const DOCS_URL = 'https://github.com/MimoKit/komari-api#readme'
 
@@ -131,7 +133,7 @@ async function rpc(method, params) {
 async function fetchNodes() {
   const results = await Promise.all([
     rpc('admin:listClients'),
-    rpc('getNodesLatestStatus'),
+    rpc('common:getNodesLatestStatus'),
   ])
   return { clients: results[0] || [], live: results[1] || {} }
 }
@@ -244,7 +246,6 @@ function route(fn) {
         return fn(req, res, cfg)
       })
       .catch(function (e) {
-        if (res.statusCode === 200 && res.getHeader && false) { /* noop */ }
         const code = e && typeof e.code === 'number' ? e.code : 0
         if (code === -32602) fail(res, 400, 'invalid_params', e.message)
         else if (code === -32044) fail(res, 404, 'not_found', e.message)
@@ -410,17 +411,19 @@ async function pingRecords(req, res, cfg) {
 
 /* --------------------------------- 注册 --------------------------------- */
 
-for (let i = 0; i < ROUTE_PATHS.length; i++) {
-  const p = ROUTE_PATHS[i]
-  server.route('OPTIONS', p, route(function (req, res) { res.statusCode = 204; res.end() }))
+function load() {
+  for (let i = 0; i < ROUTE_PATHS.length; i++) {
+    const p = ROUTE_PATHS[i]
+    server.route('OPTIONS', p, function (req, res) { applyCors(res, cfgCache); res.statusCode = 204; res.end() })
+  }
+
+  server.route('GET', '/api/v1', route(apiIndex))
+  server.route('GET', '/api/v1/overview', route(overview))
+  server.route('GET', '/api/v1/nodes', route(listNodes))
+  server.route('GET', '/api/v1/nodes/:uuid', route(nodeDetail))
+  server.route('GET', '/api/v1/nodes/:uuid/records', route(nodeRecords))
+  server.route('GET', '/api/v1/ping/tasks', route(pingTasks))
+  server.route('GET', '/api/v1/ping/records', route(pingRecords))
+
+  console.log('[komari-api] 开放 API 已就绪：/api/v1 (v' + PLUGIN_VERSION + ')')
 }
-
-server.route('GET', '/api/v1', route(apiIndex))
-server.route('GET', '/api/v1/overview', route(overview))
-server.route('GET', '/api/v1/nodes', route(listNodes))
-server.route('GET', '/api/v1/nodes/:uuid', route(nodeDetail))
-server.route('GET', '/api/v1/nodes/:uuid/records', route(nodeRecords))
-server.route('GET', '/api/v1/ping/tasks', route(pingTasks))
-server.route('GET', '/api/v1/ping/records', route(pingRecords))
-
-console.log('[komari-api] 开放 API 已就绪：/api/v1 (v' + PLUGIN_VERSION + ')')
